@@ -1,0 +1,35 @@
+# Build output
+build/
+build_game/
+bin/
+cmake-build-*/
+out/
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+compile_commands.json
+CMakeUserPresets.json
+
+# IDE & tools
+.idea/
+.vs/
+.vscode/
+.claude/
+*.user
+*.swp
+
+# Compiled binaries (in case any leak into the tree)
+*.o
+*.obj
+*.exe
+*.dll
+*.dylib
+*.so
+*.pdb
+*.ilk
+
+# OS
+.DS_Store
+Thumbs.db
