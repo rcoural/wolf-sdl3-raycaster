@@ -6,6 +6,8 @@ The raycasting itself runs on the **CPU** (classic DDA: textured walls, floors a
 
 Comes with a small tile-based level editor that reads/writes the same binary `.lvl` format.
 
+![In-game view of a textured stone corridor](docs/screenshot.png)
+
 ## Features
 
 - DDA raycaster with textured walls, floors and ceilings
