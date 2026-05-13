@@ -69,13 +69,21 @@ target_link_libraries(${PROJECT_NAME} PRIVATE SDL3::SDL3 glm)
 add_executable(editor ${EDITOR_SOURCES} ${EDITOR_HEADERS})
 target_link_libraries(editor PRIVATE SDL3::SDL3 glm)
 
-# Stage runtime data next to the executable so SDL_GetBasePath() finds them.
+# On macOS app bundles SDL_GetBasePath() returns Contents/Resources/;
+# on other platforms it returns the directory containing the executable.
+if(APPLE)
+    set(RUNTIME_DATA_DIR "$<TARGET_BUNDLE_CONTENT_DIR:${PROJECT_NAME}>/Resources")
+else()
+    set(RUNTIME_DATA_DIR "$<TARGET_FILE_DIR:${PROJECT_NAME}>")
+endif()
+
+# Stage runtime data where SDL_GetBasePath() will find them.
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         "${CMAKE_SOURCE_DIR}/assets"
-        "$<TARGET_FILE_DIR:${PROJECT_NAME}>/assets"
+        "${RUNTIME_DATA_DIR}/assets"
     COMMAND ${CMAKE_COMMAND} -E make_directory
-        "$<TARGET_FILE_DIR:${PROJECT_NAME}>/shaders"
+        "${RUNTIME_DATA_DIR}/shaders"
     COMMAND ${CMAKE_COMMAND} -E copy
         "${CMAKE_SOURCE_DIR}/src/shaders/TexturedQuad.vert.spv"
         "${CMAKE_SOURCE_DIR}/src/shaders/TexturedQuad.frag.spv"
@@ -83,7 +91,7 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         "${CMAKE_SOURCE_DIR}/src/shaders/TexturedQuad.frag.msl"
         "${CMAKE_SOURCE_DIR}/src/shaders/TexturedQuad.vert.dxil"
         "${CMAKE_SOURCE_DIR}/src/shaders/TexturedQuad.frag.dxil"
-        "$<TARGET_FILE_DIR:${PROJECT_NAME}>/shaders/")
+        "${RUNTIME_DATA_DIR}/shaders/")
 
 if (WIN32)
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
